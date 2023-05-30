@@ -1,3 +1,16 @@
+# Bicep for Nova
+
+This extension provides Bicep language support and intelligence for Nova!
+
+# ✨ Features ✨
+
+- Syntax Highlighting
+- Indentation
+- Symbols
+- Code Actions
+- Hover Tooltips
+
+
 
 # Credit 🙏🏻
 

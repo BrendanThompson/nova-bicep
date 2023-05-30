@@ -4,4 +4,7 @@
 
 ### ✨ New
 - Syntax Highlighting
-- Autocompletion
+- Indentation
+- Symbols
+- Code Actions
+- Hover Tooltips
