@@ -1,0 +1,35 @@
+{
+    "identifier": "com.brendanthompson.nova-bicep",
+    "name": "Bicep",
+    "organization": "Brendan Thompson",
+    "description": "Bicep language support",
+    "repository": "https://github.com/BrendanThompson/nova-bicep",
+    "bugs": "https://github.com/BrendanThompson/nova-bicep/issues",
+    "homepage": "https://brendanthompson.com",
+    "version": "1.0.0",
+    "categories": ["languages"],
+    "activationEvents": ["onLanguage:Bicep", "onWorkspaceContains:*.bicep"],
+    "main": "main.js",
+    "entitlements": {
+        "process": true,
+        "filesystem": "readonly"
+    },
+    "config": [{
+            "key": "nova-bicep.language-server-path",
+            "title": "Language Server Path",
+            "type": "path"
+        },
+        {
+            "key": "nova-bicep.dotnet-path",
+            "title": "DotNet Binary Path",
+            "type": "path",
+            "default": "/opt/homebrew/bin/dotnet"
+        },
+        {
+            "key": "nova-bicep.enable-language-server",
+            "title": "Enable Bicep Language Server",
+            "type": "boolean",
+            "default": false
+        }
+    ]
+}

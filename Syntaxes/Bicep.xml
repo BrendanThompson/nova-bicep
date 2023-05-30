@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syntax name="bicep">
+    <meta>
+        <name>Bicep</name>
+        <type>compiled</type>
+        <preferred-file-extension>bicep</preferred-file-extension>
+    </meta>
+
+    <detectors>
+        <extension>bicep</extension>
+    </detectors>
+
+    <scopes>
+        <include syntax="self" collection="expression" />
+        <include syntax="self" collection="comments" />
+    </scopes>
+    <collections>
+        <collection name="array-literal">
+            <scope name="source.bicep.meta.array-literal.bicep">
+                <starts-with>
+                    <expression>\[(?!(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\bfor\b)</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>]</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="expression" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="block-comment">
+            <scope name="source.bicep.comment.block.bicep">
+                <starts-with>
+                    <expression>/\*</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>\*/</expression>
+                </ends-with>
+                <subscopes />
+            </scope>
+        </collection>
+        <collection name="comments">
+            <include syntax="self" collection="line-comment" />
+            <include syntax="self" collection="block-comment" />
+        </collection>
+        <collection name="decorator">
+            <scope name="source.bicep.meta.decorator.bicep">
+                <starts-with>
+                    <expression>@(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*(?=\b[_$[:alpha:]][_$[:alnum:]]*\b)</expression>
+                </starts-with>
+                <ends-with>
+                    <expression></expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="expression" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="directive">
+            <scope name="source.bicep.meta.directive.bicep">
+                <starts-with>
+                    <expression>#\b[_a-zA-Z-0-9]+\b</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>$</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="directive-variable" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="directive-variable">
+            <scope name="source.bicep.keyword.control.declaration.bicep">
+                <expression>\b[_a-zA-Z-0-9]+\b</expression>
+            </scope>
+        </collection>
+        <collection name="escape-character">
+            <scope name="source.bicep.constant.character.escape.bicep">
+                <expression>\\(u{[0-9A-Fa-f]+}|n|r|t|\\|&apos;|\${)</expression>
+            </scope>
+        </collection>
+        <collection name="expression">
+            <include syntax="self" collection="string-literal" />
+            <include syntax="self" collection="string-verbatim" />
+            <include syntax="self" collection="numeric-literal" />
+            <include syntax="self" collection="named-literal" />
+            <include syntax="self" collection="object-literal" />
+            <include syntax="self" collection="array-literal" />
+            <include syntax="self" collection="keyword" />
+            <include syntax="self" collection="identifier" />
+            <include syntax="self" collection="function-call" />
+            <include syntax="self" collection="decorator" />
+            <include syntax="self" collection="lambda-start" />
+            <include syntax="self" collection="directive" />
+        </collection>
+        <collection name="function-call">
+            <scope name="source.bicep.meta.function-call.bicep">
+                <starts-with>
+                    <expression>(\b[_$[:alpha:]][_$[:alnum:]]*\b)(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\(</expression>
+                    <capture number="1" name="source.bicep.entity.name.function.bicep" />
+                </starts-with>
+                <ends-with>
+                    <expression>\)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="expression" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="identifier">
+            <scope name="source.bicep.variable.other.readwrite.bicep">
+                <expression>\b[_$[:alpha:]][_$[:alnum:]]*\b(?!(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\()</expression>
+            </scope>
+        </collection>
+        <collection name="keyword">
+            <scope name="source.bicep.keyword.control.declaration.bicep">
+                <expression>\b(metadata|targetScope|resource|module|param|var|output|for|in|if|existing|import|as|type|with|using|func)\b</expression>
+            </scope>
+        </collection>
+        <collection name="lambda-start">
+            <scope name="source.bicep.meta.lambda-start.bicep">
+                <starts-with>
+                    <expression>(\((?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\b[_$[:alpha:]][_$[:alnum:]]*\b(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*(,(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\b[_$[:alpha:]][_$[:alnum:]]*\b(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*)*\)|\((?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\)|(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*\b[_$[:alpha:]][_$[:alnum:]]*\b(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*)(?=(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*=&gt;)</expression>
+                    <capture number="1" name="source.bicep.meta.undefined.bicep" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*=&gt;</expression>
+                </ends-with>
+                <subscopes />
+            </scope>
+        </collection>
+        <collection name="line-comment">
+            <scope name="source.bicep.comment.line.double-slash.bicep">
+                <expression>//.*(?=$)</expression>
+            </scope>
+        </collection>
+        <collection name="named-literal">
+            <scope name="source.bicep.constant.language.bicep">
+                <expression>\b(true|false|null)\b</expression>
+            </scope>
+        </collection>
+        <collection name="numeric-literal">
+            <scope name="source.bicep.constant.numeric.bicep">
+                <expression>[0-9]+</expression>
+            </scope>
+        </collection>
+        <collection name="object-literal">
+            <scope name="source.bicep.meta.object-literal.bicep">
+                <starts-with>
+                    <expression>{</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>}</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="object-property-key" />
+                    <include syntax="self" collection="expression" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="object-property-key">
+            <scope name="source.bicep.variable.other.property.bicep">
+                <expression>\b[_$[:alpha:]][_$[:alnum:]]*\b(?=(?:[ \t\r\n]|\/\*(?:\*(?!\/)|[^*])*\*\/)*:)</expression>
+            </scope>
+        </collection>
+        <collection name="string-literal">
+            <scope name="source.bicep.string.quoted.single.bicep">
+                <starts-with>
+                    <expression>&apos;(?!&apos;&apos;)</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&apos;</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="escape-character" />
+                    <include syntax="self" collection="string-literal-subst" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="string-literal-subst">
+            <scope name="source.bicep.meta.string-literal-subst.bicep">
+                <starts-with>
+                    <expression>(?&lt;!\\)(\${)</expression>
+                    <capture number="1" name="source.bicep.punctuation.definition.template-expression.begin.bicep" />
+                </starts-with>
+                <ends-with>
+                    <expression>(})</expression>
+                    <capture number="1" name="source.bicep.punctuation.definition.template-expression.end.bicep" />
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="expression" />
+                    <include syntax="self" collection="comments" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="string-verbatim">
+            <scope name="source.bicep.string.quoted.multi.bicep">
+                <starts-with>
+                    <expression>&apos;&apos;&apos;</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&apos;&apos;&apos;</expression>
+                </ends-with>
+                <subscopes />
+            </scope>
+        </collection>
+    </collections>
+
+    <tree-sitter>
+        <folds path="folds.scm" />
+        <highlights path="highlights.scm" />
+        <indents path="indents.scm" />
+        <injections path="injfections.scm" />
+        <locals path="locals.scm" />
+    </tree-sitter>
+</syntax>
